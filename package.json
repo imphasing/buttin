@@ -1,0 +1,9 @@
+{
+  "name": "buttin",
+  "version": "1.0.0",
+  "description": "logs and reports on baby diapers",
+  "author": "Charles Fort <imphasing@gmail.com>",
+  "dependencies": {
+    "moment": "*"
+  }
+}
