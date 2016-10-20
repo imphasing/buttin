@@ -30,11 +30,59 @@ exports.handler = (event, context, callback) => {
     retrieveEvents(function(results) {
         var local = results.map(function (item) {
             return {
-                localTime: moment(item.timestamp).zone('America/Seattle').format('YYYY-MM-DD HH:mm'),
+                localTime: moment(item.timestamp).zone('America/Seattle'),
                 type: item.type
             };
         });
 
-        context.succeed(JSON.stringify(local));
+        var dailyBreakdown = {};
+
+        local.forEach(function (item) {
+            var key = item.localTime.format('YYYY-MM-DD');
+            if (!(key in dailyBreakdown)) {
+                dailyBreakdown[key] = {
+                    wet: 0,
+                    bm: 0
+                };
+            }
+
+            var bm = 0;
+            var wet = 0;
+
+            if (item.type == "BM" || item.type == "BOTH") {
+                bm++;
+            } else if (item.type == "WET" || item.type == "BOTH") {
+                wet++;
+            }
+
+            dailyBreakdown[key].wet += wet;
+            dailyBreakdown[key].bm += bm;
+        });
+
+        var totals = {
+            wet: 0,
+            bm: 0
+        };
+
+        var averages = {
+            wet: 0,
+            bm: 0
+        }
+
+        Object.keys(dailyBreakdown).forEach(function (key) {
+            totals.wet += dailyBreakdown[key].wet;
+            totals.bm += dailyBreakdown[key].bm;
+        });
+
+        averages.bm = totals.bm / Object.keys(dailyBreakdown).length;
+        averages.wet = totals.wet / Object.keys(dailyBreakdown).length
+
+        var report = {
+            dailyBreakdown: dailyBreakdown,
+            totals: totals,
+            averages: averages 
+        }
+
+        context.succeed(JSON.stringify(report));
     });  
 };
