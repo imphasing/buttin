@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script class="include" type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="canvasjs.min.js"></script>
+		<script type="text/javascript">
+
+		var getDiaperData = function(apiUrl, cb) {
+			return $.get(apiUrl, function(data) {
+				var deserialized = JSON.parse(data);
+
+				var sorted = {};
+				Object.keys(deserialized.dailyBreakdown).sort().forEach(function(key) {
+					sorted[key] = deserialized.dailyBreakdown[key];
+				});
+
+				deserialized.dailyBreakdown = sorted;
+
+				var data = [{type: "column", dataPoints: []},{type: "column", dataPoints: []}];
+				Object.keys(deserialized.dailyBreakdown).forEach(function (key) {
+					data[0].dataPoints.push({y: deserialized.dailyBreakdown[key].bm, label: key})
+					data[1].dataPoints.push({y: deserialized.dailyBreakdown[key].wet, label: key})
+				});
+
+				cb(data, deserialized.totals, deserialized.averages);
+			});
+		};
+
+		getDiaperData("<API ENDPOINT>", function(data, totals, averages) {
+			var chart = new CanvasJS.Chart("chartContainer", {
+				title: {
+					text: "Daily diaper breakdown (Blue = BM, Red = Wet)"
+				},
+				data: data
+			});
+			chart.render();
+			$("#totals").text("Wet: " + totals.wet + " BM: " + totals.bm);
+			$("#averages").text("Wet: " + averages.wet + " BM: " + averages.bm);
+		});
+
+	</script>
+	<title>sw8 babby diaper reporting</title>
+</head>
+
+<body>
+	<div id="chartContainer" style="height: 400px; width: 100%;"></div><br />
+	Totals: <div id="totals"></div><br />
+	Daily Averages: <div id="averages"></div><br />
+</body>
+
+</html>

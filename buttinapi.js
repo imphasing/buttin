@@ -2,6 +2,7 @@
 
 const AWS = require('aws-sdk');
 const moment = require('moment');
+const momenttz = require('moment-timezone');
 
 var dynamodb = new AWS.DynamoDB();
 
@@ -22,6 +23,8 @@ var retrieveEvents = function(cb) {
             };
         });
 
+        console.log(JSON.stringify(results));
+
         cb(results);
     });
 }
@@ -30,7 +33,7 @@ exports.handler = (event, context, callback) => {
     retrieveEvents(function(results) {
         var local = results.map(function (item) {
             return {
-                localTime: moment(item.timestamp).zone('America/Seattle'),
+                localTime: moment(item.timestamp).tz('America/Los_Angeles'),
                 type: item.type
             };
         });

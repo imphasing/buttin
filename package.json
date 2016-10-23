@@ -4,6 +4,7 @@
   "description": "logs and reports on baby diapers",
   "author": "Charles Fort <imphasing@gmail.com>",
   "dependencies": {
-    "moment": "*"
+    "moment": "*",
+    "moment-timezone": "*"
   }
 }
