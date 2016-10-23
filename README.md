@@ -8,4 +8,10 @@ Table is a simple 2 column table, datetime in UTC and type of diaper. In the cas
 
 The IoT button supports 3 click types, which I use for the different diaper types: single press for wet, double click for BM, long press for both.
 
+Action shot of the button:
+
 ![buttin](https://raw.githubusercontent.com/imphasing/buttin/master/buttin.jpg)
+
+Screenshot of reporting interface:
+
+![buttin](https://raw.githubusercontent.com/imphasing/buttin/master/diaperReport.png)
