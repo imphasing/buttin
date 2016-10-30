@@ -54,7 +54,8 @@ exports.handler = (event, context, callback) => {
 
             if (item.type == "BM" || item.type == "BOTH") {
                 bm++;
-            } else if (item.type == "WET" || item.type == "BOTH") {
+            }
+            if (item.type == "WET" || item.type == "BOTH") {
                 wet++;
             }
 
